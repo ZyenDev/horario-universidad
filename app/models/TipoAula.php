@@ -1,36 +1,32 @@
 <?php
 require_once '../app/core/Database.php';
 
-class Materia {
-    protected static $table = 'materias';  // Especificar la tabla asociada
+class TipoAula {
+    protected static $table = 'tipo_aula';  // Especificar la tabla asociada
 
-    // Obtener todas las materias
+    // Obtener todos los tipos de aula
     public static function all() {
         $db = Database::getInstance();
-        $query = $db->query("SELECT nombre FROM " . static::$table);
+        $query = $db->query("SELECT id, nombre, created_at, updated_at FROM " . static::$table);
         return $query->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Buscar una materia por su id
+    // Buscar un tipo de aula por su id
     public static function find($id) {
         $db = Database::getInstance();
-        $stmt = $db->prepare("SELECT nombre FROM " . static::$table . " WHERE id = :id");
+        $stmt = $db->prepare("SELECT id, nombre, created_at, updated_at FROM " . static::$table . " WHERE id = :id");
         $stmt->execute(['id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Crear una nueva materia
+    // Crear un nuevo tipo de aula
     public static function create($nombre) {
         $db = Database::getInstance();
         $stmt = $db->prepare("INSERT INTO " . static::$table . " (nombre) VALUES (:nombre)");
-        $data = [
-            'nombre' => $nombre
-        ];
-
-        $stmt->execute($data);
+        $stmt->execute(['nombre' => $nombre]);
     }
 
-    // Actualizar una materia por su id
+    // Actualizar un tipo de aula por su id
     public static function update($id, $nombre) {
         $db = Database::getInstance();
         $stmt = $db->prepare("
@@ -45,7 +41,7 @@ class Materia {
         $stmt->execute($data);
     }
 
-    // Eliminar una materia por su id
+    // Eliminar un tipo de aula por su id
     public static function delete($id) {
         $db = Database::getInstance();
         $stmt = $db->prepare("DELETE FROM " . static::$table . " WHERE id = :id");
