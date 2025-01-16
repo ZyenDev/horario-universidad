@@ -7,7 +7,7 @@ class Database {
 
     public static function getInstance() {
         if (!self::$instance) {
-            self::$instance = new PDO('mysql:host=localhost;dbname=university', 'root', '');
+            self::$instance = new PDO('mysql:host=localhost;dbname=db_linares', 'root', '');
             self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         return self::$instance;

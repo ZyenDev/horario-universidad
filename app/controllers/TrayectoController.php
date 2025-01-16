@@ -1,8 +1,8 @@
 <?php
 namespace App\Controllers;
 
-require_once '../app/core/Controller.php';
-require_once '../app/models/Trayecto.php';
+require_once '../Core/Controller.php';
+require_once '../Models/Trayecto.php';
 
 use App\Core\Controller;
 use App\Models\Trayecto;
@@ -11,24 +11,24 @@ class TrayectoController extends Controller {
     // Método para listar todos los trayectos
     public function index() {
         $trayectos = Trayecto::all();
-        $this->render('trayecto/index', ['trayectos' => $trayectos]);
+        $this->render('coordinador/trayecto/index', ['trayectos' => $trayectos]);
     }
 
     // Método para mostrar el formulario de creación de un trayecto
-    public function create() {
-        $this->render('trayecto/crear');
+    public function crear() {
+        $this->render('coordinador/trayecto/crear');
     }
 
     // Método para almacenar un nuevo trayecto
-    public function store() {
+    public function guardar() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/trayecto');
+            $this->redirect('/coordinador/trayecto');
         }
 
         $data = $this->validateTrayectoData($_POST);
         if (empty($data)) {
             $this->setFlash('error', 'Datos inválidos');
-            $this->redirect('/trayecto/crear');
+            $this->redirect('/coordinador/trayecto/crear');
         }
 
         try {
@@ -38,7 +38,7 @@ class TrayectoController extends Controller {
             $this->setFlash('error', 'Error al crear el trayecto: ' . $e->getMessage());
         }
 
-        $this->redirect('/trayecto');
+        $this->redirect('/coordinador/trayecto');
     }
 
     // Método para mostrar el formulario de edición de un trayecto
@@ -46,21 +46,21 @@ class TrayectoController extends Controller {
         $trayecto = Trayecto::find($id);
         if (!$trayecto) {
             $this->setFlash('error', 'Trayecto no encontrado');
-            $this->redirect('/trayecto');
+            $this->redirect('/coordinador/trayecto');
         }
-        $this->render('trayecto/editar', ['trayecto' => $trayecto]);
+        $this->render('coordinador/trayecto/editar', ['trayecto' => $trayecto]);
     }
 
     // Método para actualizar un trayecto
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/trayecto');
+            $this->redirect('/coordinador/trayecto');
         }
 
         $data = $this->validateTrayectoData($_POST, true);
         if (empty($data)) {
             $this->setFlash('error', 'Datos inválidos');
-            $this->redirect("/trayecto/editar/$id");
+            $this->redirect("/coordinador/trayecto/editar/$id");
         }
 
         try {
@@ -70,13 +70,13 @@ class TrayectoController extends Controller {
             $this->setFlash('error', 'Error al actualizar el trayecto: ' . $e->getMessage());
         }
 
-        $this->redirect('/trayecto');
+        $this->redirect('/coordinador/trayecto');
     }
 
     // Método para eliminar un trayecto
     public function delete($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/trayecto');
+            $this->redirect('/coordinador/trayecto');
         }
 
         try {
@@ -86,7 +86,7 @@ class TrayectoController extends Controller {
             $this->setFlash('error', 'Error al eliminar el trayecto: ' . $e->getMessage());
         }
 
-        $this->redirect('/trayecto');
+        $this->redirect('/coordinador/trayecto');
     }
 
     // Método para validar los datos del trayecto
@@ -110,3 +110,4 @@ class TrayectoController extends Controller {
         return $validatedData;
     }
 }
+

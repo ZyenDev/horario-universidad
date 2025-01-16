@@ -1,8 +1,8 @@
 <?php
 namespace App\Controllers;
 
-require_once '../app/core/Controller.php';
-require_once '../app/models/Persona.php';
+require_once '../Core/Controller.php';
+require_once '../Models/Persona.php';
 
 use App\Core\Controller;
 use App\Models\Persona;
@@ -11,24 +11,24 @@ class PersonaController extends Controller {
     // Método para listar todos los registros
     public function index() {
         $personas = Persona::all();
-        $this->render('persona/index', ['personas' => $personas]);
+        $this->render('coordinador/personas/index', ['personas' => $personas]);
     }
 
     // Método para mostrar el formulario de creación
-    public function create() {
-        $this->render('persona/crear');
+    public function crear() {
+        $this->render('coordinador/personas/crear');
     }
 
     // Método para almacenar un nuevo registro
-    public function store() {
+    public function guardar() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/persona');
+            $this->redirect('/coordinador/persona');
         }
 
         $data = $this->validatePersonaData($_POST);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de persona inválidos');
-            $this->redirect('/persona/crear');
+            $this->redirect('/coordinador/persona/crear');
         }
 
         try {
@@ -43,7 +43,7 @@ class PersonaController extends Controller {
             $this->setFlash('error', 'Error al crear la persona: ' . $e->getMessage());
         }
 
-        $this->redirect('/persona');
+        $this->redirect('/coordinador/persona');
     }
 
     // Método para mostrar el formulario de edición
@@ -51,21 +51,21 @@ class PersonaController extends Controller {
         $persona = Persona::find($id);
         if (!$persona) {
             $this->setFlash('error', 'Persona no encontrada');
-            $this->redirect('/persona');
+            $this->redirect('/coordinador/persona');
         }
-        $this->render('persona/editar', ['persona' => $persona]);
+        $this->render('coordinador/persona/editar', ['persona' => $persona]);
     }
 
     // Método para actualizar un registro existente
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/persona');
+            $this->redirect('/coordinador/persona');
         }
 
         $data = $this->validatePersonaData($_POST, true);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de persona inválidos');
-            $this->redirect("/persona/editar/$id");
+            $this->redirect("/coordinador/persona/editar/$id");
         }
 
         try {
@@ -81,13 +81,13 @@ class PersonaController extends Controller {
             $this->setFlash('error', 'Error al actualizar la persona: ' . $e->getMessage());
         }
 
-        $this->redirect('/persona');
+        $this->redirect('/coordinador/persona');
     }
 
     // Método para eliminar un registro
     public function delete($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/persona');
+            $this->redirect('/coordinador/persona');
         }
 
         try {
@@ -97,7 +97,7 @@ class PersonaController extends Controller {
             $this->setFlash('error', 'Error al eliminar la persona: ' . $e->getMessage());
         }
 
-        $this->redirect('/persona');
+        $this->redirect('/coordinador/persona');
     }
 
     // Método para validar los datos de entrada
@@ -159,3 +159,4 @@ class PersonaController extends Controller {
         return $validatedData;
     }
 }
+

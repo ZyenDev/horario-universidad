@@ -1,8 +1,8 @@
 <?php
 namespace App\Controllers;
 
-require_once '../app/core/Controller.php';
-require_once '../app/models/Usuario.php';
+require_once '../Core/Controller.php';
+require_once '../Models/Usuario.php';
 
 use App\Core\Controller;
 use App\Models\Usuario;
@@ -10,22 +10,22 @@ use App\Models\Usuario;
 class UsuarioController extends Controller {
     public function index() {
         $usuarios = Usuario::all();
-        $this->render('usuarios/index', ['usuarios' => $usuarios]);
+        $this->render('coordinador/usuarios/index', ['usuarios' => $usuarios]);
     }
 
-    public function create() {
-        $this->render('usuarios/crear');
+    public function crear() {
+        $this->render('coordinador/usuarios/crear');
     }
 
-    public function store() {
+    public function guardar() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/usuarios');
+            $this->redirect('/coordinador/usuarios');
         }
 
         $data = $this->validateUserData($_POST);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de usuario inválidos');
-            $this->redirect('/usuarios/crear');
+            $this->redirect('/coordinador/usuarios/crear');
         }
 
         try {
@@ -35,27 +35,27 @@ class UsuarioController extends Controller {
             $this->setFlash('error', 'Error al crear el usuario: ' . $e->getMessage());
         }
 
-        $this->redirect('/usuarios');
+        $this->redirect('/coordinador/usuarios');
     }
 
     public function edit($id) {
         $usuario = Usuario::find($id);
         if (!$usuario) {
             $this->setFlash('error', 'Usuario no encontrado');
-            $this->redirect('/usuarios');
+            $this->redirect('/coordinador/usuarios');
         }
-        $this->render('usuarios/editar', ['usuario' => $usuario]);
+        $this->render('coordinador/usuarios/editar', ['usuario' => $usuario]);
     }
 
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/usuarios');
+            $this->redirect('/coordinador/usuarios');
         }
 
         $data = $this->validateUserData($_POST, true);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de usuario inválidos');
-            $this->redirect("/usuarios/editar/$id");
+            $this->redirect("/coordinador/usuarios/editar/$id");
         }
 
         try {
@@ -65,12 +65,12 @@ class UsuarioController extends Controller {
             $this->setFlash('error', 'Error al actualizar el usuario: ' . $e->getMessage());
         }
 
-        $this->redirect('/usuarios');
+        $this->redirect('/coordinador/usuarios');
     }
 
     public function delete($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/usuarios');
+            $this->redirect('/coordinador/usuarios');
         }
 
         try {
@@ -80,7 +80,7 @@ class UsuarioController extends Controller {
             $this->setFlash('error', 'Error al eliminar el usuario: ' . $e->getMessage());
         }
 
-        $this->redirect('/usuarios');
+        $this->redirect('/coordinador/usuarios');
     }
 
     private function validateUserData($data, $isUpdate = false) {
@@ -115,3 +115,4 @@ class UsuarioController extends Controller {
         return $validatedData;
     }
 }
+

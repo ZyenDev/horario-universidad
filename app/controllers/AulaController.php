@@ -1,8 +1,8 @@
 <?php
 namespace App\Controllers;
 
-require_once '../app/core/Controller.php';
-require_once '../app/models/Aula.php';
+require_once '../Core/Controller.php';
+require_once '../Models/Aula.php';
 
 use App\Core\Controller;
 use App\Models\Aula;
@@ -11,24 +11,24 @@ class AulaController extends Controller {
     // Método para listar todas las aulas
     public function index() {
         $aulas = Aula::all();
-        $this->render('aula/index', ['aulas' => $aulas]);
+        $this->render('coordinador/aula/index', ['aulas' => $aulas]);
     }
 
     // Método para mostrar el formulario de creación
-    public function create() {
-        $this->render('aula/crear');
+    public function crear() {
+        $this->render('coordinador/aula/crear');
     }
 
     // Método para almacenar un nuevo aula
-    public function store() {
+    public function guardar() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/aula');
+            $this->redirect('/coordinador/aula');
         }
 
         $data = $this->validateAulaData($_POST);
         if (empty($data)) {
             $this->setFlash('error', 'Datos del aula inválidos');
-            $this->redirect('/aula/crear');
+            $this->redirect('/coordinador/aula/crear');
         }
 
         try {
@@ -38,7 +38,7 @@ class AulaController extends Controller {
             $this->setFlash('error', 'Error al crear el aula: ' . $e->getMessage());
         }
 
-        $this->redirect('/aula');
+        $this->redirect('/coordinador/aula');
     }
 
     // Método para mostrar el formulario de edición
@@ -46,21 +46,21 @@ class AulaController extends Controller {
         $aula = Aula::find($id);
         if (!$aula) {
             $this->setFlash('error', 'Aula no encontrada');
-            $this->redirect('/aula');
+            $this->redirect('/coordinador/aula');
         }
-        $this->render('aula/editar', ['aula' => $aula]);
+        $this->render('coordinador/aula/editar', ['aula' => $aula]);
     }
 
     // Método para actualizar un aula existente
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/aula');
+            $this->redirect('/coordinador/aula');
         }
 
         $data = $this->validateAulaData($_POST, true);
         if (empty($data)) {
             $this->setFlash('error', 'Datos del aula inválidos');
-            $this->redirect("/aula/editar/$id");
+            $this->redirect("/coordinador/aula/editar/$id");
         }
 
         try {
@@ -70,13 +70,13 @@ class AulaController extends Controller {
             $this->setFlash('error', 'Error al actualizar el aula: ' . $e->getMessage());
         }
 
-        $this->redirect('/aula');
+        $this->redirect('/coordinador/aula');
     }
 
     // Método para eliminar un aula
     public function delete($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/aula');
+            $this->redirect('/coordinador/aula');
         }
 
         try {
@@ -86,7 +86,7 @@ class AulaController extends Controller {
             $this->setFlash('error', 'Error al eliminar el aula: ' . $e->getMessage());
         }
 
-        $this->redirect('/aula');
+        $this->redirect('/coordinador/aula');
     }
 
     // Método para validar los datos del aula
@@ -110,3 +110,4 @@ class AulaController extends Controller {
         return $validatedData;
     }
 }
+
