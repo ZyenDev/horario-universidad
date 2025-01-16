@@ -28,6 +28,7 @@ CREATE TABLE `alumno` (
   `updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `fk_trayecto` int NOT NULL,
   `fk_persona` int NOT NULL,
+  `estatus` TINYINT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `alumno_unique` (`fk_persona`),
   KEY `alumno_trayecto_FK` (`fk_trayecto`),
