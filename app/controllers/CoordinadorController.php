@@ -1,17 +1,14 @@
 <?php
 namespace App\Controllers;
 
-require_once '../app/core/Controller.php';
-require_once '../app/models/Coordinador.php';
-
-use App\Core\Controller;
-use App\Models\Coordinador;
+use App\Config\Controller;
+use Coordinador;
 
 class CoordinadorController extends Controller {
     // Método para listar todos los registros
     public function index() {
         $coordinadores = Coordinador::all();
-        $this->render('coordinador/index', ['coordinadores' => $coordinadores]);
+        $this->render('coordinador/', ['coordinadores' => $coordinadores]);
     }
 
     // Método para mostrar el formulario de creación

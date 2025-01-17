@@ -1,16 +1,14 @@
 <?php
 namespace App\Controllers;
 
-require_once '../Core/Controller.php';
-require_once '../Models/Alumno.php';
-
-use App\Core\Controller;
-use App\Models\Alumno;
+use Alumno;
+use App\Config\Controller;
 
 class AlumnoController extends Controller {
+
     public function index() {
         $alumnos = Alumno::all();
-        $this->render('coordinador/alumnos/index', ['alumnos' => $alumnos]);
+        $this->render('coordinador/alumnos/', ['alumnos' => $alumnos]);
     }
 
     public function crear() {

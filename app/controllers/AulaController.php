@@ -1,17 +1,14 @@
 <?php
 namespace App\Controllers;
 
-require_once '../Core/Controller.php';
-require_once '../Models/Aula.php';
-
-use App\Core\Controller;
-use App\Models\Aula;
+use App\Config\Controller;
+use Aula;
 
 class AulaController extends Controller {
     // Método para listar todas las aulas
     public function index() {
         $aulas = Aula::all();
-        $this->render('coordinador/aula/index', ['aulas' => $aulas]);
+        $this->render('coordinador/aula/', ['aulas' => $aulas]);
     }
 
     // Método para mostrar el formulario de creación
@@ -95,7 +92,7 @@ class AulaController extends Controller {
 
         // Validar código
         if (!empty($data['codigo'])) {
-            $validatedData['codigo'] = filter_var($data['codigo'], FILTER_SANITIZE_STRING);
+            $validatedData['codigo'] = filter_var($data['codigo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }

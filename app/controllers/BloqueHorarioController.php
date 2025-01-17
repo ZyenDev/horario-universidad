@@ -1,17 +1,14 @@
 <?php
 namespace App\Controllers;
 
-require_once '../Core/Controller.php';
-require_once '../Models/BloqueHorario.php';
-
-use App\Core\Controller;
-use App\Models\BloqueHorario;
+use App\Config\Controller;
+use BloqueHorario;
 
 class BloqueHorarioController extends Controller {
     // Método para listar todos los registros
     public function index() {
         $bloques = BloqueHorario::all();
-        $this->render('coordinador/bloque_horario/index', ['bloques' => $bloques]);
+        $this->render('coordinador/bloque_horario/', ['bloques' => $bloques]);
     }
 
     // Método para mostrar el formulario de creación
@@ -132,7 +129,7 @@ class BloqueHorarioController extends Controller {
 
         // Validar hora
         if (!empty($data['hora']) && preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])$/', $data['hora'])) {
-            $validatedData['hora'] = filter_var($data['hora'], FILTER_SANITIZE_STRING);
+            $validatedData['hora'] = filter_var($data['hora'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }

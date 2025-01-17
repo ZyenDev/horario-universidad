@@ -1,17 +1,14 @@
 <?php
 namespace App\Controllers;
 
-require_once '../Core/Controller.php';
-require_once '../Models/Profesor.php';
-
-use App\Core\Controller;
-use App\Models\Profesor;
+use App\Config\Controller;
+use Profesor;
 
 class ProfesorController extends Controller {
     // Método para listar todos los registros
     public function index() {
         $profesores = Profesor::all();
-        $this->render('coordinador/profesor/index', ['profesores' => $profesores]);
+        $this->render('coordinador/profesor/', ['profesores' => $profesores]);
     }
 
     // Método para mostrar el formulario de creación

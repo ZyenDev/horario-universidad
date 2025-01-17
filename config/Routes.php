@@ -7,6 +7,7 @@ $routes = [
     'logout' => ['controller' => 'AuthController', 'action' => 'logout'],
 
     // Rutas del Coordinador
+    '/coordinador' => ['controller' => 'CoordinadorController', 'action' => 'index'],
     '/coordinador/profesor' => ['controller' => 'ProfesorController', 'action' => 'index'],
     '/coordinador/profesor/crear' => ['controller' => 'ProfesorController', 'action' => 'create'],
     '/coordinador/profesor/guardar' => ['controller' => 'ProfesorController', 'action' => 'store', 'method' => 'POST'],

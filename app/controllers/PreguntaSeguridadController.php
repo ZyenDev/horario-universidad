@@ -1,17 +1,14 @@
 <?php
 namespace App\Controllers;
 
-require_once '../Core/Controller.php';
-require_once '../Models/PreguntaSeguridad.php';
-
-use App\Core\Controller;
-use App\Models\PreguntaSeguridad;
+use App\Config\Controller;
+use PreguntaSeguridad;
 
 class PreguntaSeguridadController extends Controller {
     // Método para listar todos los registros
     public function index() {
         $preguntas = PreguntaSeguridad::all();
-        $this->render('coordinador/pregunta_seguridad/index', ['preguntas' => $preguntas]);
+        $this->render('coordinador/pregunta_seguridad/', ['preguntas' => $preguntas]);
     }
 
     // Método para mostrar el formulario de creación
@@ -95,7 +92,7 @@ class PreguntaSeguridadController extends Controller {
 
         // Validar respuesta
         if (!empty($data['respuesta'])) {
-            $validatedData['respuesta'] = filter_var($data['respuesta'], FILTER_SANITIZE_STRING);
+            $validatedData['respuesta'] = filter_var($data['respuesta'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }

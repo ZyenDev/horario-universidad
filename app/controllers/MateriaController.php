@@ -1,17 +1,14 @@
 <?php
 namespace App\Controllers;
 
-require_once '../Core/Controller.php';
-require_once '../Models/Materia.php';
-
-use App\Core\Controller;
-use App\Models\Materia;
+use App\Config\Controller;
+use Materia;
 
 class MateriaController extends Controller {
     // Método para listar todas las materias
     public function index() {
         $materias = Materia::all();
-        $this->render('coordinador/materia/index', ['materias' => $materias]);
+        $this->render('coordinador/materia/', ['materias' => $materias]);
     }
 
     // Método para mostrar el formulario de creación
@@ -95,7 +92,7 @@ class MateriaController extends Controller {
 
         // Validar nombre
         if (!empty($data['nombre'])) {
-            $validatedData['nombre'] = filter_var($data['nombre'], FILTER_SANITIZE_STRING);
+            $validatedData['nombre'] = filter_var($data['nombre'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } else {
             return [];
         }

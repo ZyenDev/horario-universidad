@@ -1,16 +1,13 @@
 <?php
 namespace App\Controllers;
 
-require_once '../Core/Controller.php';
-require_once '../Models/Usuario.php';
-
-use App\Core\Controller;
-use App\Models\Usuario;
+use App\Config\Controller;
+use Usuario;
 
 class UsuarioController extends Controller {
     public function index() {
         $usuarios = Usuario::all();
-        $this->render('coordinador/usuarios/index', ['usuarios' => $usuarios]);
+        $this->render('coordinador/usuarios/', ['usuarios' => $usuarios]);
     }
 
     public function crear() {
@@ -51,20 +48,27 @@ class UsuarioController extends Controller {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->redirect('/coordinador/usuarios');
         }
-
+    
         $data = $this->validateUserData($_POST, true);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de usuario inválidos');
             $this->redirect("/coordinador/usuarios/editar/$id");
         }
-
+    
         try {
-            Usuario::update($id, $data);
+            // Extract the necessary fields from $data
+            $usuario = $data['usuario'] ?? null;
+            $contrasena = $data['contrasena'] ?? null;
+            $fk_persona = $data['fk_persona'] ?? null;
+            $fk_rol = $data['fk_rol'] ?? null;
+    
+            // Call the update method with all required arguments
+            Usuario::update($id, $usuario, $contrasena, $fk_persona, $fk_rol);
             $this->setFlash('success', 'Usuario actualizado exitosamente');
         } catch (\Exception $e) {
             $this->setFlash('error', 'Error al actualizar el usuario: ' . $e->getMessage());
         }
-
+    
         $this->redirect('/coordinador/usuarios');
     }
 

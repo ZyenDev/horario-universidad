@@ -1,17 +1,14 @@
 <?php
 namespace App\Controllers;
 
-require_once '../Core/Controller.php';
-require_once '../Models/Persona.php';
-
-use App\Core\Controller;
-use App\Models\Persona;
+use App\Config\Controller;
+use Persona;
 
 class PersonaController extends Controller {
     // Método para listar todos los registros
     public function index() {
         $personas = Persona::all();
-        $this->render('coordinador/personas/index', ['personas' => $personas]);
+        $this->render('coordinador/personas/', ['personas' => $personas]);
     }
 
     // Método para mostrar el formulario de creación
@@ -106,26 +103,26 @@ class PersonaController extends Controller {
 
         // Validar primer nombre
         if (!empty($data['primer_nombre'])) {
-            $validatedData['primer_nombre'] = filter_var($data['primer_nombre'], FILTER_SANITIZE_STRING);
+            $validatedData['primer_nombre'] = filter_var($data['primer_nombre'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }
 
         // Validar segundo nombre
         if (!empty($data['segundo_nombre'])) {
-            $validatedData['segundo_nombre'] = filter_var($data['segundo_nombre'], FILTER_SANITIZE_STRING);
+            $validatedData['segundo_nombre'] = filter_var($data['segundo_nombre'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         }
 
         // Validar primer apellido
         if (!empty($data['primer_apellido'])) {
-            $validatedData['primer_apellido'] = filter_var($data['primer_apellido'], FILTER_SANITIZE_STRING);
+            $validatedData['primer_apellido'] = filter_var($data['primer_apellido'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }
 
         // Validar segundo apellido
         if (!empty($data['segundo_apellido'])) {
-            $validatedData['segundo_apellido'] = filter_var($data['segundo_apellido'], FILTER_SANITIZE_STRING);
+            $validatedData['segundo_apellido'] = filter_var($data['segundo_apellido'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         }
 
         // Validar cédula
@@ -137,7 +134,7 @@ class PersonaController extends Controller {
 
         // Validar sexo
         if (!empty($data['sexo'])) {
-            $validatedData['sexo'] = filter_var($data['sexo'], FILTER_SANITIZE_STRING);
+            $validatedData['sexo'] = filter_var($data['sexo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }

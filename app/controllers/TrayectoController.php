@@ -1,17 +1,14 @@
 <?php
 namespace App\Controllers;
 
-require_once '../Core/Controller.php';
-require_once '../Models/Trayecto.php';
-
-use App\Core\Controller;
-use App\Models\Trayecto;
+use App\Config\Controller;
+use Trayecto;
 
 class TrayectoController extends Controller {
     // Método para listar todos los trayectos
     public function index() {
         $trayectos = Trayecto::all();
-        $this->render('coordinador/trayecto/index', ['trayectos' => $trayectos]);
+        $this->render('coordinador/trayecto/', ['trayectos' => $trayectos]);
     }
 
     // Método para mostrar el formulario de creación de un trayecto
@@ -95,12 +92,12 @@ class TrayectoController extends Controller {
 
         // Validar código
         if (!empty($data['codigo']) && is_string($data['codigo']) && strlen($data['codigo']) > 0) {
-            $validatedData['codigo'] = filter_var($data['codigo'], FILTER_SANITIZE_STRING);
+            $validatedData['codigo'] = filter_var($data['codigo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         }
 
         // Validar periodo
         if (!empty($data['periodo']) && is_string($data['periodo']) && strlen($data['periodo']) > 0) {
-            $validatedData['periodo'] = filter_var($data['periodo'], FILTER_SANITIZE_STRING);
+            $validatedData['periodo'] = filter_var($data['periodo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         }
 
         if (empty($validatedData['codigo']) || empty($validatedData['periodo'])) {

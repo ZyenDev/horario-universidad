@@ -1,17 +1,14 @@
 <?php
 namespace App\Controllers;
 
-require_once '../Core/Controller.php';
-require_once '../Models/Rol.php';
-
-use App\Core\Controller;
-use App\Models\Rol;
+use App\Config\Controller;
+use Rol;
 
 class RolController extends Controller {
     // Método para listar todos los registros
     public function index() {
         $roles = Rol::all();
-        $this->render('coordinador/rol/index', ['roles' => $roles]);
+        $this->render('coordinador/rol/', ['roles' => $roles]);
     }
 
     // Método para mostrar el formulario de creación
@@ -95,7 +92,7 @@ class RolController extends Controller {
 
         // Validar nombre
         if (!empty($data['nombre']) && is_string($data['nombre']) && strlen($data['nombre']) > 0) {
-            $validatedData['nombre'] = filter_var($data['nombre'], FILTER_SANITIZE_STRING);
+            $validatedData['nombre'] = filter_var($data['nombre'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }
