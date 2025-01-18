@@ -1,34 +1,31 @@
 <?php
 namespace App\Controllers;
 
-require_once '../app/core/Controller.php';
-require_once '../app/models/BloqueHorario.php';
-
-use App\Core\Controller;
-use App\Models\BloqueHorario;
+use App\Config\Controller;
+use BloqueHorario;
 
 class BloqueHorarioController extends Controller {
     // Método para listar todos los registros
     public function index() {
         $bloques = BloqueHorario::all();
-        $this->render('bloque_horario/index', ['bloques' => $bloques]);
+        $this->render('coordinador/bloque_horario/', ['bloques' => $bloques]);
     }
 
     // Método para mostrar el formulario de creación
-    public function create() {
-        $this->render('bloque_horario/crear');
+    public function crear() {
+        $this->render('coordinador/bloque_horario/crear');
     }
 
     // Método para almacenar un nuevo registro
-    public function store() {
+    public function guardar() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/bloque_horario');
+            $this->redirect('/coordinador/bloque_horario');
         }
 
         $data = $this->validateBloqueHorarioData($_POST);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de bloque horario inválidos');
-            $this->redirect('/bloque_horario/crear');
+            $this->redirect('/coordinador/bloque_horario/crear');
         }
 
         try {
@@ -42,7 +39,7 @@ class BloqueHorarioController extends Controller {
             $this->setFlash('error', 'Error al crear el bloque horario: ' . $e->getMessage());
         }
 
-        $this->redirect('/bloque_horario');
+        $this->redirect('/coordinador/bloque_horario');
     }
 
     // Método para mostrar el formulario de edición
@@ -50,21 +47,21 @@ class BloqueHorarioController extends Controller {
         $bloque = BloqueHorario::find($id);
         if (!$bloque) {
             $this->setFlash('error', 'Bloque horario no encontrado');
-            $this->redirect('/bloque_horario');
+            $this->redirect('/coordinador/bloque_horario');
         }
-        $this->render('bloque_horario/editar', ['bloque' => $bloque]);
+        $this->render('coordinador/bloque_horario/editar', ['bloque' => $bloque]);
     }
 
     // Método para actualizar un registro existente
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/bloque_horario');
+            $this->redirect('/coordinador/bloque_horario');
         }
 
         $data = $this->validateBloqueHorarioData($_POST, true);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de bloque horario inválidos');
-            $this->redirect("/bloque_horario/editar/$id");
+            $this->redirect("/coordinador/bloque_horario/editar/$id");
         }
 
         try {
@@ -79,13 +76,13 @@ class BloqueHorarioController extends Controller {
             $this->setFlash('error', 'Error al actualizar el bloque horario: ' . $e->getMessage());
         }
 
-        $this->redirect('/bloque_horario');
+        $this->redirect('/coordinador/bloque_horario');
     }
 
     // Método para eliminar un registro
     public function delete($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/bloque_horario');
+            $this->redirect('/coordinador/bloque_horario');
         }
 
         try {
@@ -95,7 +92,7 @@ class BloqueHorarioController extends Controller {
             $this->setFlash('error', 'Error al eliminar el bloque horario: ' . $e->getMessage());
         }
 
-        $this->redirect('/bloque_horario');
+        $this->redirect('/coordinador/bloque_horario');
     }
 
     // Método para validar los datos de entrada
@@ -132,7 +129,7 @@ class BloqueHorarioController extends Controller {
 
         // Validar hora
         if (!empty($data['hora']) && preg_match('/^([01]?[0-9]|2[0-3]):([0-5][0-9])$/', $data['hora'])) {
-            $validatedData['hora'] = filter_var($data['hora'], FILTER_SANITIZE_STRING);
+            $validatedData['hora'] = filter_var($data['hora'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }
@@ -140,3 +137,4 @@ class BloqueHorarioController extends Controller {
         return $validatedData;
     }
 }
+

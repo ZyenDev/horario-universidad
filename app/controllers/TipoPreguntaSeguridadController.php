@@ -1,34 +1,31 @@
 <?php
 namespace App\Controllers;
 
-require_once '../app/core/Controller.php';
-require_once '../app/models/TipoPreguntaSeguridad.php';
-
-use App\Core\Controller;
-use App\Models\TipoPreguntaSeguridad;
+use App\Config\Controller;
+use TipoPreguntaSeguridad;
 
 class TipoPreguntaSeguridadController extends Controller {
     // Método para listar todos los tipos de pregunta de seguridad
     public function index() {
         $tiposPreguntaSeguridad = TipoPreguntaSeguridad::all();
-        $this->render('tipo_pregunta_seguridad/index', ['tiposPreguntaSeguridad' => $tiposPreguntaSeguridad]);
+        $this->render('coordinador/tipo_pregunta_seguridad/', ['tiposPreguntaSeguridad' => $tiposPreguntaSeguridad]);
     }
 
     // Método para mostrar el formulario de creación de un tipo de pregunta de seguridad
-    public function create() {
-        $this->render('tipo_pregunta_seguridad/crear');
+    public function crear() {
+        $this->render('coordinador/tipo_pregunta_seguridad/crear');
     }
 
     // Método para almacenar un nuevo tipo de pregunta de seguridad
-    public function store() {
+    public function guardar() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/tipo_pregunta_seguridad');
+            $this->redirect('/coordinador/tipo_pregunta_seguridad');
         }
 
         $data = $this->validateTipoPreguntaSeguridadData($_POST);
         if (empty($data)) {
             $this->setFlash('error', 'Nombre de tipo de pregunta de seguridad inválido');
-            $this->redirect('/tipo_pregunta_seguridad/crear');
+            $this->redirect('/coordinador/tipo_pregunta_seguridad/crear');
         }
 
         try {
@@ -38,7 +35,7 @@ class TipoPreguntaSeguridadController extends Controller {
             $this->setFlash('error', 'Error al crear el tipo de pregunta de seguridad: ' . $e->getMessage());
         }
 
-        $this->redirect('/tipo_pregunta_seguridad');
+        $this->redirect('/coordinador/tipo_pregunta_seguridad');
     }
 
     // Método para mostrar el formulario de edición de un tipo de pregunta de seguridad
@@ -46,21 +43,21 @@ class TipoPreguntaSeguridadController extends Controller {
         $tipoPreguntaSeguridad = TipoPreguntaSeguridad::find($id);
         if (!$tipoPreguntaSeguridad) {
             $this->setFlash('error', 'Tipo de pregunta de seguridad no encontrado');
-            $this->redirect('/tipo_pregunta_seguridad');
+            $this->redirect('/coordinador/tipo_pregunta_seguridad');
         }
-        $this->render('tipo_pregunta_seguridad/editar', ['tipoPreguntaSeguridad' => $tipoPreguntaSeguridad]);
+        $this->render('coordinador/tipo_pregunta_seguridad/editar', ['tipoPreguntaSeguridad' => $tipoPreguntaSeguridad]);
     }
 
     // Método para actualizar un tipo de pregunta de seguridad
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/tipo_pregunta_seguridad');
+            $this->redirect('/coordinador/tipo_pregunta_seguridad');
         }
 
         $data = $this->validateTipoPreguntaSeguridadData($_POST, true);
         if (empty($data)) {
             $this->setFlash('error', 'Nombre de tipo de pregunta de seguridad inválido');
-            $this->redirect("/tipo_pregunta_seguridad/editar/$id");
+            $this->redirect("/coordinador/tipo_pregunta_seguridad/editar/$id");
         }
 
         try {
@@ -70,13 +67,13 @@ class TipoPreguntaSeguridadController extends Controller {
             $this->setFlash('error', 'Error al actualizar el tipo de pregunta de seguridad: ' . $e->getMessage());
         }
 
-        $this->redirect('/tipo_pregunta_seguridad');
+        $this->redirect('/coordinador/tipo_pregunta_seguridad');
     }
 
     // Método para eliminar un tipo de pregunta de seguridad
     public function delete($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/tipo_pregunta_seguridad');
+            $this->redirect('/coordinador/tipo_pregunta_seguridad');
         }
 
         try {
@@ -86,7 +83,7 @@ class TipoPreguntaSeguridadController extends Controller {
             $this->setFlash('error', 'Error al eliminar el tipo de pregunta de seguridad: ' . $e->getMessage());
         }
 
-        $this->redirect('/tipo_pregunta_seguridad');
+        $this->redirect('/coordinador/tipo_pregunta_seguridad');
     }
 
     // Método para validar los datos de entrada para el tipo de pregunta de seguridad
@@ -95,7 +92,7 @@ class TipoPreguntaSeguridadController extends Controller {
 
         // Validar nombre
         if (!empty($data['nombre']) && is_string($data['nombre']) && strlen($data['nombre']) > 0) {
-            $validatedData['nombre'] = filter_var($data['nombre'], FILTER_SANITIZE_STRING);
+            $validatedData['nombre'] = filter_var($data['nombre'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }
@@ -103,3 +100,4 @@ class TipoPreguntaSeguridadController extends Controller {
         return $validatedData;
     }
 }
+

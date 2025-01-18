@@ -1,34 +1,31 @@
 <?php
 namespace App\Controllers;
 
-require_once '../app/core/Controller.php';
-require_once '../app/models/PreguntaSeguridad.php';
-
-use App\Core\Controller;
-use App\Models\PreguntaSeguridad;
+use App\Config\Controller;
+use PreguntaSeguridad;
 
 class PreguntaSeguridadController extends Controller {
     // Método para listar todos los registros
     public function index() {
         $preguntas = PreguntaSeguridad::all();
-        $this->render('pregunta_seguridad/index', ['preguntas' => $preguntas]);
+        $this->render('coordinador/pregunta_seguridad/', ['preguntas' => $preguntas]);
     }
 
     // Método para mostrar el formulario de creación
-    public function create() {
-        $this->render('pregunta_seguridad/crear');
+    public function crear() {
+        $this->render('coordinador/pregunta_seguridad/crear');
     }
 
     // Método para almacenar un nuevo registro
-    public function store() {
+    public function guardar() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/pregunta_seguridad');
+            $this->redirect('/coordinador/pregunta_seguridad');
         }
 
         $data = $this->validatePreguntaSeguridadData($_POST);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de pregunta de seguridad inválidos');
-            $this->redirect('/pregunta_seguridad/crear');
+            $this->redirect('/coordinador/pregunta_seguridad/crear');
         }
 
         try {
@@ -38,7 +35,7 @@ class PreguntaSeguridadController extends Controller {
             $this->setFlash('error', 'Error al crear la pregunta de seguridad: ' . $e->getMessage());
         }
 
-        $this->redirect('/pregunta_seguridad');
+        $this->redirect('/coordinador/pregunta_seguridad');
     }
 
     // Método para mostrar el formulario de edición
@@ -46,21 +43,21 @@ class PreguntaSeguridadController extends Controller {
         $pregunta = PreguntaSeguridad::find($id);
         if (!$pregunta) {
             $this->setFlash('error', 'Pregunta de seguridad no encontrada');
-            $this->redirect('/pregunta_seguridad');
+            $this->redirect('/coordinador/pregunta_seguridad');
         }
-        $this->render('pregunta_seguridad/editar', ['pregunta' => $pregunta]);
+        $this->render('coordinador/pregunta_seguridad/editar', ['pregunta' => $pregunta]);
     }
 
     // Método para actualizar un registro existente
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/pregunta_seguridad');
+            $this->redirect('/coordinador/pregunta_seguridad');
         }
 
         $data = $this->validatePreguntaSeguridadData($_POST, true);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de pregunta de seguridad inválidos');
-            $this->redirect("/pregunta_seguridad/editar/$id");
+            $this->redirect("/coordinador/pregunta_seguridad/editar/$id");
         }
 
         try {
@@ -70,13 +67,13 @@ class PreguntaSeguridadController extends Controller {
             $this->setFlash('error', 'Error al actualizar la pregunta de seguridad: ' . $e->getMessage());
         }
 
-        $this->redirect('/pregunta_seguridad');
+        $this->redirect('/coordinador/pregunta_seguridad');
     }
 
     // Método para eliminar un registro
     public function delete($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/pregunta_seguridad');
+            $this->redirect('/coordinador/pregunta_seguridad');
         }
 
         try {
@@ -86,7 +83,7 @@ class PreguntaSeguridadController extends Controller {
             $this->setFlash('error', 'Error al eliminar la pregunta de seguridad: ' . $e->getMessage());
         }
 
-        $this->redirect('/pregunta_seguridad');
+        $this->redirect('/coordinador/pregunta_seguridad');
     }
 
     // Método para validar los datos de entrada
@@ -95,7 +92,7 @@ class PreguntaSeguridadController extends Controller {
 
         // Validar respuesta
         if (!empty($data['respuesta'])) {
-            $validatedData['respuesta'] = filter_var($data['respuesta'], FILTER_SANITIZE_STRING);
+            $validatedData['respuesta'] = filter_var($data['respuesta'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }
@@ -110,3 +107,4 @@ class PreguntaSeguridadController extends Controller {
         return $validatedData;
     }
 }
+

@@ -1,34 +1,31 @@
 <?php
 namespace App\Controllers;
 
-require_once '../app/core/Controller.php';
-require_once '../app/models/Profesor.php';
-
-use App\Core\Controller;
-use App\Models\Profesor;
+use App\Config\Controller;
+use Profesor;
 
 class ProfesorController extends Controller {
     // Método para listar todos los registros
     public function index() {
         $profesores = Profesor::all();
-        $this->render('profesor/index', ['profesores' => $profesores]);
+        $this->render('coordinador/profesor/', ['profesores' => $profesores]);
     }
 
     // Método para mostrar el formulario de creación
-    public function create() {
-        $this->render('profesor/crear');
+    public function crear() {
+        $this->render('coordinador/profesor/crear');
     }
 
     // Método para almacenar un nuevo registro
-    public function store() {
+    public function guardar() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/profesor');
+            $this->redirect('/coordinador/profesor');
         }
 
         $data = $this->validateProfesorData($_POST);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de profesor inválidos');
-            $this->redirect('/profesor/crear');
+            $this->redirect('/coordinador/profesor/crear');
         }
 
         try {
@@ -38,7 +35,7 @@ class ProfesorController extends Controller {
             $this->setFlash('error', 'Error al crear el profesor: ' . $e->getMessage());
         }
 
-        $this->redirect('/profesor');
+        $this->redirect('/coordinador/profesor');
     }
 
     // Método para mostrar el formulario de edición
@@ -46,21 +43,21 @@ class ProfesorController extends Controller {
         $profesor = Profesor::find($id);
         if (!$profesor) {
             $this->setFlash('error', 'Profesor no encontrado');
-            $this->redirect('/profesor');
+            $this->redirect('/coordinador/profesor');
         }
-        $this->render('profesor/editar', ['profesor' => $profesor]);
+        $this->render('coordinador/profesor/editar', ['profesor' => $profesor]);
     }
 
     // Método para actualizar un registro existente
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/profesor');
+            $this->redirect('/coordinador/profesor');
         }
 
         $data = $this->validateProfesorData($_POST, true);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de profesor inválidos');
-            $this->redirect("/profesor/editar/$id");
+            $this->redirect("/coordinador/profesor/editar/$id");
         }
 
         try {
@@ -70,13 +67,13 @@ class ProfesorController extends Controller {
             $this->setFlash('error', 'Error al actualizar el profesor: ' . $e->getMessage());
         }
 
-        $this->redirect('/profesor');
+        $this->redirect('/coordinador/profesor');
     }
 
     // Método para eliminar un registro
     public function delete($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/profesor');
+            $this->redirect('/coordinador/profesor');
         }
 
         try {
@@ -86,7 +83,7 @@ class ProfesorController extends Controller {
             $this->setFlash('error', 'Error al eliminar el profesor: ' . $e->getMessage());
         }
 
-        $this->redirect('/profesor');
+        $this->redirect('/coordinador/profesor');
     }
 
     // Método para validar los datos de entrada
@@ -103,3 +100,4 @@ class ProfesorController extends Controller {
         return $validatedData;
     }
 }
+

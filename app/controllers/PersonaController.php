@@ -1,34 +1,31 @@
 <?php
 namespace App\Controllers;
 
-require_once '../app/core/Controller.php';
-require_once '../app/models/Persona.php';
-
-use App\Core\Controller;
-use App\Models\Persona;
+use App\Config\Controller;
+use Persona;
 
 class PersonaController extends Controller {
     // Método para listar todos los registros
     public function index() {
         $personas = Persona::all();
-        $this->render('persona/index', ['personas' => $personas]);
+        $this->render('coordinador/personas/', ['personas' => $personas]);
     }
 
     // Método para mostrar el formulario de creación
-    public function create() {
-        $this->render('persona/crear');
+    public function crear() {
+        $this->render('coordinador/personas/crear');
     }
 
     // Método para almacenar un nuevo registro
-    public function store() {
+    public function guardar() {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/persona');
+            $this->redirect('/coordinador/persona');
         }
 
         $data = $this->validatePersonaData($_POST);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de persona inválidos');
-            $this->redirect('/persona/crear');
+            $this->redirect('/coordinador/persona/crear');
         }
 
         try {
@@ -43,7 +40,7 @@ class PersonaController extends Controller {
             $this->setFlash('error', 'Error al crear la persona: ' . $e->getMessage());
         }
 
-        $this->redirect('/persona');
+        $this->redirect('/coordinador/persona');
     }
 
     // Método para mostrar el formulario de edición
@@ -51,21 +48,21 @@ class PersonaController extends Controller {
         $persona = Persona::find($id);
         if (!$persona) {
             $this->setFlash('error', 'Persona no encontrada');
-            $this->redirect('/persona');
+            $this->redirect('/coordinador/persona');
         }
-        $this->render('persona/editar', ['persona' => $persona]);
+        $this->render('coordinador/persona/editar', ['persona' => $persona]);
     }
 
     // Método para actualizar un registro existente
     public function update($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/persona');
+            $this->redirect('/coordinador/persona');
         }
 
         $data = $this->validatePersonaData($_POST, true);
         if (empty($data)) {
             $this->setFlash('error', 'Datos de persona inválidos');
-            $this->redirect("/persona/editar/$id");
+            $this->redirect("/coordinador/persona/editar/$id");
         }
 
         try {
@@ -81,13 +78,13 @@ class PersonaController extends Controller {
             $this->setFlash('error', 'Error al actualizar la persona: ' . $e->getMessage());
         }
 
-        $this->redirect('/persona');
+        $this->redirect('/coordinador/persona');
     }
 
     // Método para eliminar un registro
     public function delete($id) {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $this->redirect('/persona');
+            $this->redirect('/coordinador/persona');
         }
 
         try {
@@ -97,7 +94,7 @@ class PersonaController extends Controller {
             $this->setFlash('error', 'Error al eliminar la persona: ' . $e->getMessage());
         }
 
-        $this->redirect('/persona');
+        $this->redirect('/coordinador/persona');
     }
 
     // Método para validar los datos de entrada
@@ -106,26 +103,26 @@ class PersonaController extends Controller {
 
         // Validar primer nombre
         if (!empty($data['primer_nombre'])) {
-            $validatedData['primer_nombre'] = filter_var($data['primer_nombre'], FILTER_SANITIZE_STRING);
+            $validatedData['primer_nombre'] = filter_var($data['primer_nombre'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }
 
         // Validar segundo nombre
         if (!empty($data['segundo_nombre'])) {
-            $validatedData['segundo_nombre'] = filter_var($data['segundo_nombre'], FILTER_SANITIZE_STRING);
+            $validatedData['segundo_nombre'] = filter_var($data['segundo_nombre'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         }
 
         // Validar primer apellido
         if (!empty($data['primer_apellido'])) {
-            $validatedData['primer_apellido'] = filter_var($data['primer_apellido'], FILTER_SANITIZE_STRING);
+            $validatedData['primer_apellido'] = filter_var($data['primer_apellido'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }
 
         // Validar segundo apellido
         if (!empty($data['segundo_apellido'])) {
-            $validatedData['segundo_apellido'] = filter_var($data['segundo_apellido'], FILTER_SANITIZE_STRING);
+            $validatedData['segundo_apellido'] = filter_var($data['segundo_apellido'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         }
 
         // Validar cédula
@@ -137,7 +134,7 @@ class PersonaController extends Controller {
 
         // Validar sexo
         if (!empty($data['sexo'])) {
-            $validatedData['sexo'] = filter_var($data['sexo'], FILTER_SANITIZE_STRING);
+            $validatedData['sexo'] = filter_var($data['sexo'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         } elseif (!$isUpdate) {
             return [];
         }
@@ -159,3 +156,4 @@ class PersonaController extends Controller {
         return $validatedData;
     }
 }
+
